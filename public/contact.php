@@ -21,7 +21,7 @@ require_once __DIR__ . '/../includes/header.php';
         <ul class="list-unstyled">
           <li class="mb-2"><i class="fa-solid fa-envelope me-2 text-primary"></i><?= e(lang('contact.email', 'Email')) ?>: <span class="text-muted">yoqub707@gmail.com</span></li>
           <li class="mb-2"><i class="fa-solid fa-phone me-2 text-primary"></i><?= e(lang('contact.phone', 'Telefon')) ?>: <span class="text-muted">+998334064444</span></li>
-          <li class="mb-2"><i class="fa-solid fa-location-dot me-2 text-primary"></i><?= e(lang('contact.address', 'Manzil')) ?>: <span class="text-muted">Toshkent, O'zbekiston</span></li>
+          <li class="mb-2"><i class="fa-solid fa-location-dot me-2 text-primary"></i><?= e(lang('contact.address', 'Manzil')) ?>: <span class="text-muted"><?= e(lang('contact.address_value', 'Surxondaryo viloyati, Termiz shahri')) ?></span></li>
         </ul>
       </div>
     </div>

@@ -27,7 +27,7 @@ declare(strict_types=1);
         <ul class="list-unstyled small text-muted mb-2">
           <li class="mb-1"><i class="fa-solid fa-phone me-1 text-primary"></i>+998334064444</li>
           <li class="mb-1"><i class="fa-solid fa-envelope me-1 text-primary"></i>yoqub707@gmail.com</li>
-          <li class="mb-1"><i class="fa-solid fa-location-dot me-1 text-primary"></i>Toshkent, O'zbekiston</li>
+          <li class="mb-1"><i class="fa-solid fa-location-dot me-1 text-primary"></i><?= e(lang('contact.address_value', 'Surxondaryo viloyati, Termiz shahri')) ?></li>
         </ul>
         <div class="d-flex gap-2">
           <a class="btn btn-outline-primary btn-sm" href="#" aria-label="Telegram"><i class="fa-brands fa-telegram"></i></a>

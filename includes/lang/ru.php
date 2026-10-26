@@ -28,6 +28,7 @@ return [
   'contact.phone' => 'Телефон',
   'contact.email' => 'Email',
   'contact.address' => 'Адрес',
+  'contact.address_value' => 'Сурхандарьинская область, г. Термез',
 
   // Общие
   'common.save' => 'Сохранить',

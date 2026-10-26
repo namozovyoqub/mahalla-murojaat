@@ -28,6 +28,7 @@ return [
   'contact.phone' => 'Telefon',
   'contact.email' => 'Email',
   'contact.address' => 'Manzil',
+  'contact.address_value' => 'Surxondaryo viloyati, Termiz shahri',
   
   // Umumiy
   'common.save' => 'Saqlash',
