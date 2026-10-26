@@ -5,7 +5,7 @@ require_user();
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if ($id <= 0) {
-    flash('error', 'Noto‘g‘ri murojaat ID.');
+    flash('error', lang('err.invalid_app_id', 'Noto‘g‘ri murojaat ID.'));
     redirect('public/applications.php');
 }
 
@@ -15,13 +15,13 @@ $stmt->execute([$id, (int)$_SESSION['user_id']]);
 $app = $stmt->fetch();
 
 if (!$app) {
-    flash('error', 'Murojaat topilmadi yoki sizda ruxsat yo‘q.');
+    flash('error', lang('err.app_not_found_or_denied', 'Murojaat topilmadi yoki sizda ruxsat yo‘q.'));
     redirect('public/applications.php');
 }
 
 // Faqat Yangi statusidagi murojaatlarni tahrirlash mumkin
 if ($app['status'] !== 'Yangi') {
-    flash('error', 'Faqat yangi murojaatlarni tahrirlash mumkin.');
+    flash('error', lang('err.only_new_editable', 'Faqat yangi murojaatlarni tahrirlash mumkin.'));
     redirect('public/applications.php');
 }
 
@@ -72,14 +72,14 @@ if (is_post()) {
     if (!empty($_FILES['file']['name'])) {
         $f = $_FILES['file'];
         if ($f['error'] !== UPLOAD_ERR_OK) {
-            $errors[] = 'Fayl yuklashda xatolik.';
+            $errors[] = lang('err.file_upload', 'Fayl yuklashda xatolik.');
         } else {
-            if ($f['size'] > $maxSize) $errors[] = 'Fayl hajmi 10MB dan oshmasin.';
+            if ($f['size'] > $maxSize) $errors[] = lang('err.file_size', 'Fayl hajmi 10MB dan oshmasin.');
             $fi = new finfo(FILEINFO_MIME_TYPE);
             $mime = $fi->file($f['tmp_name']);
-            if (!in_array($mime, $allowedMime, true)) $errors[] = 'Ruxsat etilmagan fayl turi.';
+            if (!in_array($mime, $allowedMime, true)) $errors[] = lang('err.file_mime', 'Ruxsat etilmagan fayl turi.');
             $ext = strtolower(pathinfo($f['name'], PATHINFO_EXTENSION));
-            if (!in_array($ext, $allowedExt, true)) $errors[] = 'Ruxsat etilmagan fayl kengaytmasi.';
+            if (!in_array($ext, $allowedExt, true)) $errors[] = lang('err.file_ext', 'Ruxsat etilmagan fayl kengaytmasi.');
             
             if (!$errors) {
                 ensure_upload_dir();
@@ -94,7 +94,7 @@ if (is_post()) {
                 $basename = date('YmdHis') . '_' . bin2hex(random_bytes(8)) . '.' . $ext;
                 $target = rtrim(UPLOAD_DIR, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $basename;
                 if (!move_uploaded_file($f['tmp_name'], $target)) {
-                    $errors[] = 'Fayl saqlanmadi.';
+                    $errors[] = lang('err.file_save', 'Fayl saqlanmadi.');
                 } else {
                     $relativePath = 'uploads/' . $basename;
                 }
@@ -105,7 +105,7 @@ if (is_post()) {
     if (!$errors) {
         $stmt = $pdo->prepare('UPDATE applications SET type = ?, mahalla = ?, title = ?, message = ?, file_path = ?, updated_at = NOW() WHERE id = ?');
         $stmt->execute([$type, $mahalla, $title, $message, $relativePath, $id]);
-        flash('success', 'Murojaat muvaffaqiyatli tahrirlandi.');
+        flash('success', lang('msg.app_updated', 'Murojaat muvaffaqiyatli tahrirlandi.'));
         redirect('public/applications.php');
     } else {
         flash('error', implode(' ', $errors));
@@ -118,15 +118,15 @@ require_once __DIR__ . '/../includes/header.php';
   <img src="<?= e($page_img) ?>" alt="Uzbekistan – tarixiy obida">
   <div class="cover-overlay"></div>
   <div class="cover-caption">
-    <div class="h6 fw-semibold">Murojaatni tahrirlash</div>
-    <div class="small">№<?= (int)$app['id'] ?> sonli murojaatni tahrirlash</div>
+    <div class="h6 fw-semibold"><?= e(lang('app.edit.title', 'Murojaatni tahrirlash')) ?></div>
+    <div class="small"><?= e(lang('app.item_num', 'Murojaat №')) ?><?= (int)$app['id'] ?> <?= e(lang('app.edit.subtitle', 'sonli murojaatni tahrirlash')) ?></div>
   </div>
 </div>
 <div class="row justify-content-center">
   <div class="col-md-8 col-lg-7">
     <div class="card shadow-sm">
       <div class="card-body">
-        <h5 class="card-title mb-3"><i class="fa-solid fa-file-signature me-1"></i>Murojaatni tahrirlash (№<?= (int)$app['id'] ?>)</h5>
+        <h5 class="card-title mb-3"><i class="fa-solid fa-file-signature me-1"></i><?= e(lang('app.edit.title', 'Murojaatni tahrirlash')) ?> (<?= e(lang('app.item_num', '№')) ?><?= (int)$app['id'] ?>)</h5>
         <form method="post" enctype="multipart/form-data">
           <?= csrf_field() ?>
           <div class="mb-3">
@@ -158,26 +158,26 @@ require_once __DIR__ . '/../includes/header.php';
           
           <?php if (!empty($app['file_path'])): ?>
             <div class="mb-3 p-2 border rounded bg-light">
-              <div class="small text-muted mb-1">Mavjud yuklangan fayl:</div>
-              <a href="<?= e(rtrim(BASE_URL,'/')) ?>/<?= e($app['file_path']) ?>" target="_blank" class="btn btn-outline-secondary btn-sm mb-2"><i class="fa-solid fa-paperclip me-1"></i>Faylni ko‘rish</a>
+              <div class="small text-muted mb-1"><?= e(lang('app.edit.current_file', 'Mavjud yuklangan fayl:')) ?></div>
+              <a href="<?= e(rtrim(BASE_URL,'/')) ?>/<?= e($app['file_path']) ?>" target="_blank" class="btn btn-outline-secondary btn-sm mb-2"><i class="fa-solid fa-paperclip me-1"></i><?= e(lang('app.edit.view_file', 'Faylni ko‘rish')) ?></a>
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="delete_file" id="deleteFileCheck" value="1">
                 <label class="form-check-label text-danger small" for="deleteFileCheck">
-                  Mavjud biriktirilgan faylni o‘chirish
+                  <?= e(lang('app.edit.delete_file', 'Mavjud biriktirilgan faylni o‘chirish')) ?>
                 </label>
               </div>
             </div>
           <?php endif; ?>
 
           <div class="mb-3">
-            <label class="form-label"><?= e(lang('app.label.file', 'Yangi fayl yuklash (pdf, jpg, png, video | max 10MB)')) ?></label>
+            <label class="form-label"><?= e(lang('app.edit.new_file', 'Yangi fayl yuklash (pdf, jpg, png, video | max 10MB)')) ?></label>
             <input type="file" name="file" class="form-control" accept=".pdf,.jpg,.jpeg,.png,.mp4,.mpeg,.mov,.avi">
-            <span class="form-text text-muted small">Eski fayl o‘rniga yangi fayl biriktiriladi.</span>
+            <span class="form-text text-muted small"><?= e(lang('app.edit.new_file_hint', 'Eski fayl o‘rniga yangi fayl biriktiriladi.')) ?></span>
           </div>
 
           <div class="d-flex justify-content-between align-items-center">
-            <a href="<?= e(rtrim(BASE_URL,'/')) ?>/public/applications.php" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left me-1"></i>Orqaga</a>
-            <button class="btn btn-primary" type="submit"><i class="fa-solid fa-save me-1"></i>O‘zgarishlarni saqlash</button>
+            <a href="<?= e(rtrim(BASE_URL,'/')) ?>/public/applications.php" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left me-1"></i><?= e(lang('common.back', 'Orqaga')) ?></a>
+            <button class="btn btn-primary" type="submit"><i class="fa-solid fa-save me-1"></i><?= e(lang('app.edit.save_changes', 'O‘zgarishlarni saqlash')) ?></button>
           </div>
         </form>
       </div>

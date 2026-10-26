@@ -15,7 +15,7 @@ $test_code = '';
 if (is_post()) {
     $token = $_POST['csrf_token'] ?? '';
     if (!csrf_validate($token)) {
-        flash('error', 'Xavfsizlik xatosi.');
+        flash('error', lang('msg.csrf_error', 'Xavfsizlik xatosi.'));
         redirect('public/reset_password.php');
     }
 
@@ -24,7 +24,7 @@ if (is_post()) {
     if ($action === 'request_code') {
         $email = strtolower(trim($_POST['email'] ?? ''));
         if ($email === '') {
-            flash('error', 'Email manzilini kiriting.');
+            flash('error', lang('msg.enter_email', 'Email manzilini kiriting.'));
         } else {
             $stmt = $pdo->prepare('SELECT id FROM users WHERE email = ?');
             $stmt->execute([$email]);
@@ -39,9 +39,9 @@ if (is_post()) {
 
                 $test_code = $code; // Test rejimi uchun ekranda ko'rsatamiz
                 $step = 2;
-                flash('success', 'Tasdiqlash kodi email manzilingizga yuborildi (Simulyatsiya).');
+                flash('success', lang('msg.reset_code_sent', 'Tasdiqlash kodi email manzilingizga yuborildi (Simulyatsiya).'));
             } else {
-                flash('error', 'Ushbu email bilan ro‘yxatdan o‘tgan foydalanuvchi topilmadi.');
+                flash('error', lang('msg.reset_user_not_found', 'Ushbu email bilan ro‘yxatdan o‘tgan foydalanuvchi topilmadi.'));
             }
         }
     } elseif ($action === 'reset_password') {
@@ -54,20 +54,20 @@ if (is_post()) {
         $password_confirm = $_POST['password_confirm'] ?? '';
 
         if (!$email || !$session_code) {
-            flash('error', 'Sessiya muddati tugagan yoki xatolik. Qaytadan urinib ko‘ring.');
+            flash('error', lang('msg.reset_expired', 'Sessiya muddati tugagan yoki xatolik. Qaytadan urinib ko‘ring.'));
             $step = 1;
         } elseif (time() - $session_time > 600) { // 10 daqiqa
-            flash('error', 'Tasdiqlash kodining muddati tugagan.');
+            flash('error', lang('msg.reset_code_expired', 'Tasdiqlash kodining muddati tugagan.'));
             unset($_SESSION['reset_email'], $_SESSION['reset_code'], $_SESSION['reset_time']);
             $step = 1;
         } elseif ($input_code !== $session_code) {
-            flash('error', 'Tasdiqlash kodi noto‘g‘ri.');
+            flash('error', lang('msg.reset_code_wrong', 'Tasdiqlash kodi noto‘g‘ri.'));
             $step = 2;
         } elseif (strlen($password) < 6) {
-            flash('error', 'Yangi parol kamida 6 belgidan iborat bo‘lishi kerak.');
+            flash('error', lang('msg.reset_password_length', 'Yangi parol kamida 6 belgidan iborat bo‘lishi kerak.'));
             $step = 2;
         } elseif ($password !== $password_confirm) {
-            flash('error', 'Parollar mos kelmadi.');
+            flash('error', lang('msg.reset_passwords_mismatch', 'Parollar mos kelmadi.'));
             $step = 2;
         } else {
             // Parolni yangilash
@@ -76,7 +76,7 @@ if (is_post()) {
             $stmt->execute([$hash, $email]);
 
             unset($_SESSION['reset_email'], $_SESSION['reset_code'], $_SESSION['reset_time']);
-            flash('success', 'Parolingiz muvaffaqiyatli o‘zgartirildi. Yangi parol bilan tizimga kiring.');
+            flash('success', lang('msg.reset_success', 'Parolingiz muvaffaqiyatli o‘zgartirildi. Yangi parol bilan tizimga kiring.'));
             redirect('public/login.php');
         }
     }
@@ -89,55 +89,55 @@ require_once __DIR__ . '/../includes/header.php';
     <div class="row g-0 shadow-sm rounded overflow-hidden">
       
       <div class="col-md-6 p-4 p-md-5 bg-white order-2 order-md-1">
-        <h4 class="mb-3"><i class="fa-solid fa-key me-1"></i>Parolni tiklash</h4>
+        <h4 class="mb-3"><i class="fa-solid fa-key me-1"></i><?= e(lang('reset.title', 'Parolni tiklash')) ?></h4>
         
         <?php if ($step === 1): ?>
-          <p class="text-muted small">Tizimga kirish parolini tiklash uchun ro‘yxatdan o‘tgan email manzilingizni kiriting. Biz sizga vaqtinchalik tasdiqlash kodini jo‘natamiz.</p>
+          <p class="text-muted small"><?= e(lang('reset.desc_step1', 'Tizimga kirish parolini tiklash uchun ro‘yxatdan o‘tgan email manzilingizni kiriting. Biz sizga vaqtinchalik tasdiqlash kodini jo‘natamiz.')) ?></p>
           
           <form method="post" class="needs-validation" novalidate>
             <?= csrf_field() ?>
             <input type="hidden" name="action" value="request_code">
             <div class="mb-3">
-              <label class="form-label">Email manzil</label>
+              <label class="form-label"><?= e(lang('reset.email_label', 'Email manzil')) ?></label>
               <input type="email" name="email" class="form-control" placeholder="email@example.com" value="<?= e($email) ?>" required>
             </div>
-            <button class="btn btn-primary w-100" type="submit">Tasdiqlash kodini olish</button>
+            <button class="btn btn-primary w-100" type="submit"><?= e(lang('reset.btn_send_code', 'Tasdiqlash kodini olish')) ?></button>
           </form>
           
         <?php else: ?>
           <?php if (!empty($test_code)): ?>
             <div class="alert alert-warning mb-3">
-              <i class="fa-solid fa-flask me-1"></i> <strong>Test rejimi:</strong> Tasdiqlash kodi: <code><?= e($test_code) ?></code>
+              <i class="fa-solid fa-flask me-1"></i> <strong><?= e(lang('reset.test_mode', 'Test rejimi')) ?>:</strong> <?= e(lang('reset.code_label', 'Tasdiqlash kodi')) ?>: <code><?= e($test_code) ?></code>
             </div>
           <?php endif; ?>
           
-          <p class="text-muted small">Sizning <code><?= e($_SESSION['reset_email'] ?? '') ?></code> emailingizga yuborilgan 6 xonali tasdiqlash kodini kiriting va yangi parolni belgilang.</p>
+          <p class="text-muted small"><?= e(lang('reset.desc_step2', 'Sizning emailingizga yuborilgan 6 xonali tasdiqlash kodini kiriting va yangi parolni belgilang.')) ?></p>
           
           <form method="post" class="needs-validation" novalidate>
             <?= csrf_field() ?>
             <input type="hidden" name="action" value="reset_password">
             
             <div class="mb-3">
-              <label class="form-label">Tasdiqlash kodi</label>
+              <label class="form-label"><?= e(lang('reset.code_label', 'Tasdiqlash kodi')) ?></label>
               <input type="text" name="code" class="form-control text-center fw-semibold fs-5" placeholder="123456" maxlength="6" required>
             </div>
             
             <div class="mb-3">
-              <label class="form-label">Yangi parol</label>
-              <input type="password" name="password" class="form-control" placeholder="Kamida 6 ta belgi" required>
+              <label class="form-label"><?= e(lang('reset.new_password', 'Yangi parol')) ?></label>
+              <input type="password" name="password" class="form-control" placeholder="<?= e(lang('reset.password_placeholder', 'Kamida 6 ta belgi')) ?>" required>
             </div>
             
             <div class="mb-3">
-              <label class="form-label">Yangi parolni takrorlang</label>
-              <input type="password" name="password_confirm" class="form-control" placeholder="Kamida 6 ta belgi" required>
+              <label class="form-label"><?= e(lang('reset.confirm_password', 'Yangi parolni takrorlang')) ?></label>
+              <input type="password" name="password_confirm" class="form-control" placeholder="<?= e(lang('reset.password_placeholder', 'Kamida 6 ta belgi')) ?>" required>
             </div>
             
-            <button class="btn btn-success w-100" type="submit">Parolni yangilash</button>
+            <button class="btn btn-success w-100" type="submit"><?= e(lang('reset.btn_submit', 'Parolni yangilash')) ?></button>
           </form>
         <?php endif; ?>
         
         <div class="mt-3 text-center">
-          <a href="<?= e(rtrim(BASE_URL,'/')) ?>/public/login.php" class="small"><i class="fa-solid fa-arrow-left me-1"></i>Kirish sahifasiga qaytish</a>
+          <a href="<?= e(rtrim(BASE_URL,'/')) ?>/public/login.php" class="small"><i class="fa-solid fa-arrow-left me-1"></i><?= e(lang('reset.back_to_login', 'Kirish sahifasiga qaytish')) ?></a>
         </div>
       </div>
       
@@ -146,8 +146,8 @@ require_once __DIR__ . '/../includes/header.php';
           <img src="<?= e($page_img) ?>" alt="Uzbekistan – tarixiy obida">
           <div class="cover-overlay"></div>
           <div class="cover-caption">
-            <div class="fw-semibold">Parolni tiklash xizmati</div>
-            <div class="small">Xavfsizlik qoidalariga rioya qilgan holda parolingizni tezda tiklang.</div>
+            <div class="fw-semibold"><?= e(lang('reset.hero_title', 'Parolni tiklash xizmati')) ?></div>
+            <div class="small"><?= e(lang('reset.hero_subtitle', 'Xavfsizlik qoidalariga rioya qilgan holda parolingizni tezda tiklang.')) ?></div>
           </div>
         </div>
       </div>

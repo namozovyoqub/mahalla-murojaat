@@ -42,7 +42,7 @@ $total = array_sum($stats);
   <div class="col-6 col-md-4 col-lg-2">
     <div class="card text-center shadow-sm">
       <div class="card-body">
-        <div class="fw-semibold mb-1"><?= e($k) ?></div>
+        <div class="fw-semibold mb-1"><?= e(status_label($k)) ?></div>
         <div class="display-6"><?= e((string)$v) ?></div>
       </div>
     </div>

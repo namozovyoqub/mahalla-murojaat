@@ -16,8 +16,8 @@ foreach ($pdo->query('SELECT status, COUNT(*) c FROM applications GROUP BY statu
   <img src="<?= e($dash_img) ?>" alt="Uzbekistan – tarixiy obida">
   <div class="cover-overlay"></div>
   <div class="cover-caption">
-    <div class="h5 fw-semibold">Admin boshqaruv paneli</div>
-    <div class="small">Statistika va murojaatlar hisobi</div>
+    <div class="h5 fw-semibold"><?= e(lang('admin.dash.title', 'Admin boshqaruv paneli')) ?></div>
+    <div class="small"><?= e(lang('admin.dash.subtitle', 'Statistika va murojaatlar hisobi')) ?></div>
   </div>
 </div>
 <div class="row g-3">
@@ -25,11 +25,11 @@ foreach ($pdo->query('SELECT status, COUNT(*) c FROM applications GROUP BY statu
     <div class="card shadow-sm">
       <div class="card-body d-flex justify-content-between align-items-center">
         <div>
-          <h5 class="mb-1">Admin boshqaruv paneli</h5>
-          <div class="text-muted">Jami murojaatlar: <strong><?= e((string)$tot) ?></strong></div>
+          <h5 class="mb-1"><?= e(lang('admin.dash.title', 'Admin boshqaruv paneli')) ?></h5>
+          <div class="text-muted"><?= e(lang('admin.dash.total_apps', 'Jami murojaatlar')) ?>: <strong><?= e((string)$tot) ?></strong></div>
         </div>
         <div>
-          <a href="<?= e(rtrim(BASE_URL,'/')) ?>/admin/applications.php" class="btn btn-outline-primary">Barchasini ko'rish</a>
+          <a href="<?= e(rtrim(BASE_URL,'/')) ?>/admin/applications.php" class="btn btn-outline-primary"><?= e(lang('dashboard.view_all', "Barchasini ko'rish")) ?></a>
         </div>
       </div>
     </div>
@@ -38,7 +38,7 @@ foreach ($pdo->query('SELECT status, COUNT(*) c FROM applications GROUP BY statu
   <div class="col-6 col-md-4 col-lg-2">
     <div class="card text-center shadow-sm">
       <div class="card-body">
-        <div class="fw-semibold mb-1"><?= e($k) ?></div>
+        <div class="fw-semibold mb-1"><?= e(status_label($k)) ?></div>
         <div class="display-6"><?= e((string)$v) ?></div>
       </div>
     </div>

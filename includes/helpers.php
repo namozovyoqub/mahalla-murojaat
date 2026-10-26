@@ -107,10 +107,24 @@ function status_badge_class(string $status): string {
     switch ($status) {
         case 'Yangi': return 'secondary';
         case 'Qabul qilindi': return 'primary';
-        case 'Ko‘rib chiqilmoqda': return 'warning';
+        case 'Ko‘rib chiqilmoqda':
+        case "Ko'rib chiqilmoqda": return 'warning';
         case 'Hal qilindi': return 'success';
         case 'Rad etildi': return 'danger';
         default: return 'secondary';
+    }
+}
+
+function status_label(?string $status): string {
+    if (!$status) return '-';
+    switch ($status) {
+        case 'Yangi': return lang('status.yangi', 'Yangi');
+        case 'Qabul qilindi': return lang('status.qabul', 'Qabul qilindi');
+        case 'Ko‘rib chiqilmoqda':
+        case "Ko'rib chiqilmoqda": return lang('status.korib', 'Ko‘rib chiqilmoqda');
+        case 'Hal qilindi': return lang('status.hal', 'Hal qilindi');
+        case 'Rad etildi': return lang('status.rad', 'Rad etildi');
+        default: return $status;
     }
 }
 
@@ -120,9 +134,9 @@ function statuses(): array {
 
 function app_types(): array {
     return [
-        'ariza' => 'Ariza',
-        'shikoyat' => 'Shikoyat',
-        'taklif' => 'Taklif',
+        'ariza' => lang('type.ariza', 'Ariza'),
+        'shikoyat' => lang('type.shikoyat', 'Shikoyat'),
+        'taklif' => lang('type.taklif', 'Taklif'),
     ];
 }
 

@@ -34,20 +34,20 @@ if (is_post()) {
     if (!empty($_FILES['file']['name'])) {
         $f = $_FILES['file'];
         if ($f['error'] !== UPLOAD_ERR_OK) {
-            $errors[] = 'Fayl yuklashda xatolik.';
+            $errors[] = lang('err.file_upload', 'Fayl yuklashda xatolik.');
         } else {
-            if ($f['size'] > $maxSize) $errors[] = 'Fayl hajmi 10MB dan oshmasin.';
+            if ($f['size'] > $maxSize) $errors[] = lang('err.file_size', 'Fayl hajmi 10MB dan oshmasin.');
             $fi = new finfo(FILEINFO_MIME_TYPE);
             $mime = $fi->file($f['tmp_name']);
-            if (!in_array($mime, $allowedMime, true)) $errors[] = 'Ruxsat etilmagan fayl turi.';
+            if (!in_array($mime, $allowedMime, true)) $errors[] = lang('err.file_mime', 'Ruxsat etilmagan fayl turi.');
             $ext = strtolower(pathinfo($f['name'], PATHINFO_EXTENSION));
-            if (!in_array($ext, $allowedExt, true)) $errors[] = 'Ruxsat etilmagan fayl kengaytmasi.';
+            if (!in_array($ext, $allowedExt, true)) $errors[] = lang('err.file_ext', 'Ruxsat etilmagan fayl kengaytmasi.');
             if (!$errors) {
                 ensure_upload_dir();
                 $basename = date('YmdHis').'_'.bin2hex(random_bytes(8)).'.'.$ext;
                 $target = rtrim(UPLOAD_DIR, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$basename;
                 if (!move_uploaded_file($f['tmp_name'], $target)) {
-                    $errors[] = 'Fayl saqlanmadi.';
+                    $errors[] = lang('err.file_save', 'Fayl saqlanmadi.');
                 } else {
                     $relativePath = 'uploads/'.$basename;
                 }
@@ -64,7 +64,7 @@ if (is_post()) {
         } catch (Throwable $e) {
             $stmt = $pdo->prepare('INSERT INTO applications (user_id, type, mahalla, title, message, file_path, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, \'Yangi\', NOW(), NOW())');
             $stmt->execute([(int)$_SESSION['user_id'], $type, $mahalla, $title, $message, $relativePath]);
-            flash('success', 'Murojaat yuborildi.');
+            flash('success', lang('msg.app_sent', 'Murojaat yuborildi.'));
         }
         redirect('public/applications.php');
     } else {

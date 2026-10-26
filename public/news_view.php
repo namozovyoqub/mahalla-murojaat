@@ -34,7 +34,7 @@ $img = news_cover_url($post['cover_url']);
       <?= nl2br(e($body)) ?>
     </article>
     <div class="mt-3">
-      <a class="btn btn-outline-secondary" href="<?= e(rtrim(BASE_URL,'/')) ?>/public/news.php">Orqaga</a>
+      <a class="btn btn-outline-secondary" href="<?= e(rtrim(BASE_URL,'/')) ?>/public/news.php"><?= e(lang('common.back', 'Orqaga')) ?></a>
     </div>
   </div>
 </div>

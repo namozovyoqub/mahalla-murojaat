@@ -36,16 +36,16 @@ $rows = $stmt->fetchAll();
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <div>
-              <div class="fw-semibold">Murojaat №<?= (int)$r['id'] ?> — [<?= e(app_types()[$r['type']] ?? $r['type']) ?>] <?= e($r['title']) ?></div>
+              <div class="fw-semibold"><?= e(lang('app.item_num', 'Murojaat №')) ?><?= (int)$r['id'] ?> — [<?= e(app_types()[$r['type']] ?? $r['type']) ?>] <?= e($r['title']) ?></div>
               <div class="text-muted small"><?= e(lang('common.created', 'Yaratilgan')) ?>: <?= e(format_datetime($r['created_at'])) ?> | <?= e(lang('common.updated', 'Yangilangan')) ?>: <?= e(format_datetime($r['updated_at'])) ?><?php if (!empty($r['mahalla'])): ?> | <?= e(lang('app.label.mahalla', 'Mahalla')) ?>: <?= e($r['mahalla']) ?><?php endif; ?></div>
             </div>
             <div>
-              <span class="badge text-bg-<?= e(status_badge_class($r['status'])) ?>"><?= e($r['status']) ?></span>
+              <span class="badge text-bg-<?= e(status_badge_class($r['status'])) ?>"><?= e(status_label($r['status'])) ?></span>
             </div>
           </div>
           <p class="mt-2 mb-2"><?= nl2br(e($r['message'])) ?></p>
           <?php if (!empty($r['file_path'])): ?>
-            <a class="btn btn-outline-secondary btn-sm mb-2" target="_blank" href="<?= e(rtrim(BASE_URL,'/')) ?>/<?= e($r['file_path']) ?>"><i class="fa-solid fa-paperclip me-1"></i>Biriktirilgan fayl</a>
+            <a class="btn btn-outline-secondary btn-sm mb-2" target="_blank" href="<?= e(rtrim(BASE_URL,'/')) ?>/<?= e($r['file_path']) ?>"><i class="fa-solid fa-paperclip me-1"></i><?= e(lang('common.attachment', 'Biriktirilgan fayl')) ?></a>
           <?php endif; ?>
           
           <div class="mt-3 pt-2 border-top d-flex flex-wrap justify-content-between align-items-center gap-2">
@@ -53,15 +53,15 @@ $rows = $stmt->fetchAll();
               <?php if ($r['status'] === 'Yangi'): ?>
                 <a class="btn btn-outline-primary btn-sm" href="<?= e(rtrim(BASE_URL,'/')) ?>/public/edit_application.php?id=<?= (int)$r['id'] ?>"><i class="fa-solid fa-pen-to-square me-1"></i><?= e(lang('common.edit', 'Tahrirlash')) ?></a>
               <?php else: ?>
-                <span class="text-muted small" title="Qabul qilingan murojaatlarni tahrirlab bo'lmaydi"><i class="fa-solid fa-lock me-1"></i>Tahrirlash yopiq</span>
+                <span class="text-muted small" title="<?= e(lang('app.edit_locked_title', "Qabul qilingan murojaatlarni tahrirlab bo'lmaydi")) ?>"><i class="fa-solid fa-lock me-1"></i><?= e(lang('app.edit_locked', 'Tahrirlash yopiq')) ?></span>
               <?php endif; ?>
             </div>
             <?php if (isset($r['public_code']) && $r['public_code']): ?>
               <div class="small d-flex align-items-center gap-2">
-                <span class="text-muted">Tekshirish kodi:</span>
+                <span class="text-muted"><?= e(lang('common.check_code', 'Tekshirish kodi')) ?>:</span>
                 <code><?= e($r['public_code']) ?></code>
-                <button type="button" class="btn btn-outline-secondary btn-sm" data-copy="<?= e($r['public_code']) ?>"><i class="fa-regular fa-copy me-1"></i>Nusxa olish</button>
-                <a class="btn btn-outline-primary btn-sm" href="<?= e(rtrim(BASE_URL,'/')) ?>/public/track.php?code=<?= e(urlencode($r['public_code'])) ?>"><i class="fa-solid fa-magnifying-glass me-1"></i>Tekshirish</a>
+                <button type="button" class="btn btn-outline-secondary btn-sm" data-copy="<?= e($r['public_code']) ?>"><i class="fa-regular fa-copy me-1"></i><?= e(lang('common.copy', 'Nusxa olish')) ?></button>
+                <a class="btn btn-outline-primary btn-sm" href="<?= e(rtrim(BASE_URL,'/')) ?>/public/track.php?code=<?= e(urlencode($r['public_code'])) ?>"><i class="fa-solid fa-magnifying-glass me-1"></i><?= e(lang('track.submit', 'Tekshirish')) ?></a>
               </div>
             <?php endif; ?>
           </div>

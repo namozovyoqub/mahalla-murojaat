@@ -33,13 +33,13 @@ $__bg_image = asset_url('assets/bg.jpg', 'https://images.unsplash.com/photo-1603
       'track.php' => lang('nav.track','Holat tekshirish'),
     ];
     $mapAdmin = [
-      'dashboard.php' => 'Admin',
+      'dashboard.php' => lang('admin.dash.title', 'Admin'),
       'applications.php' => lang('nav.admin.applications','Murojaatlar'),
       'users.php' => lang('nav.admin.users','Foydalanuvchilar'),
-      'login.php' => 'Admin kirish',
+      'login.php' => lang('login.admin', 'Admin kirish'),
       'application_view.php' => lang('nav.admin.applications','Murojaatlar'),
     ];
-    $__page_title = ($dir === 'admin') ? ($mapAdmin[$base] ?? 'Admin') : ($mapPublic[$base] ?? null);
+    $__page_title = ($dir === 'admin') ? ($mapAdmin[$base] ?? lang('admin.dash.title', 'Admin')) : ($mapPublic[$base] ?? null);
   } ?>
   <?php $___title = isset($__page_title) ? ($__page_title . ' — ' . APP_NAME) : APP_NAME; ?>
   <title><?= e($___title) ?></title>
@@ -288,9 +288,13 @@ $__bg_image = asset_url('assets/bg.jpg', 'https://images.unsplash.com/photo-1603
     </div>
     <div class="d-flex align-items-center gap-3">
       <div class="d-flex align-items-center gap-2">
-        <a href="?lang=uz" class="text-decoration-none <?= (($_SESSION['lang'] ?? 'uz') === 'uz') ? 'fw-bold' : '' ?>">UZ</a>
+        <?php
+          $qUz = $_GET; $qUz['lang'] = 'uz';
+          $qRu = $_GET; $qRu['lang'] = 'ru';
+        ?>
+        <a href="?<?= e(http_build_query($qUz)) ?>" class="text-decoration-none <?= (($_SESSION['lang'] ?? 'uz') === 'uz') ? 'fw-bold' : '' ?>">UZ</a>
         <span class="text-muted">/</span>
-        <a href="?lang=ru" class="text-decoration-none <?= (($_SESSION['lang'] ?? 'uz') === 'ru') ? 'fw-bold' : '' ?>">RU</a>
+        <a href="?<?= e(http_build_query($qRu)) ?>" class="text-decoration-none <?= (($_SESSION['lang'] ?? 'uz') === 'ru') ? 'fw-bold' : '' ?>">RU</a>
       </div>
       <span class="text-muted">|</span>
       <button id="theme-toggle" class="btn btn-link p-0 text-decoration-none text-primary" style="font-size: 1.1rem; border: none; outline: none; box-shadow: none;" aria-label="Toggle Theme">

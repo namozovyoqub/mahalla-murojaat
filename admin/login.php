@@ -11,7 +11,7 @@ $auth_img = asset_url('assets/admin-auth.jpg', 'https://images.unsplash.com/phot
 if (is_post()) {
     $token = $_POST['csrf_token'] ?? '';
     if (!csrf_validate($token)) {
-        flash('error', 'Xavfsizlik xatosi.');
+        flash('error', lang('msg.csrf_error', 'Xavfsizlik xatosi.'));
         redirect('admin/login.php');
     }
     $email = strtolower(trim($_POST['email'] ?? ''));
@@ -34,10 +34,10 @@ if (is_post()) {
 
     if ($isValid) {
         login_admin((int)$admin['id']);
-        flash('success', 'Admin paneliga xush kelibsiz!');
+        flash('success', lang('msg.admin_welcome', 'Admin paneliga xush kelibsiz!'));
         redirect('admin/dashboard.php');
     } else {
-        flash('error', 'Email yoki parol noto\'g\'ri.');
+        flash('error', lang('msg.invalid_credentials', 'Email yoki parol noto\'g\'ri.'));
         redirect('admin/login.php');
     }
 }
@@ -48,18 +48,18 @@ require_once __DIR__ . '/../includes/header.php';
   <div class="col-lg-10">
     <div class="row g-0 shadow-sm rounded overflow-hidden">
       <div class="col-md-6 p-4 p-md-5 bg-white order-2 order-md-1">
-        <h4 class="mb-3"><i class="fa-solid fa-user-shield me-1"></i>Admin kirish</h4>
+        <h4 class="mb-3"><i class="fa-solid fa-user-shield me-1"></i><?= e(lang('login.admin', 'Admin kirish')) ?></h4>
         <form method="post">
           <?= csrf_field() ?>
           <div class="mb-3">
-            <label class="form-label">Email</label>
+            <label class="form-label"><?= e(lang('login.email', 'Email')) ?></label>
             <input type="email" name="email" class="form-control" required>
           </div>
           <div class="mb-3">
-            <label class="form-label">Parol</label>
+            <label class="form-label"><?= e(lang('login.password', 'Parol')) ?></label>
             <input type="password" name="password" class="form-control" required>
           </div>
-          <button class="btn btn-primary w-100" type="submit">Kirish</button>
+          <button class="btn btn-primary w-100" type="submit"><?= e(lang('login.submit', 'Kirish')) ?></button>
         </form>
       </div>
       <div class="col-md-6 p-0 order-1 order-md-2">
@@ -67,8 +67,8 @@ require_once __DIR__ . '/../includes/header.php';
           <img src="<?= e($auth_img) ?>" alt="Uzbekistan – tarixiy obida">
           <div class="cover-overlay"></div>
           <div class="cover-caption">
-            <div class="fw-semibold">Admin panel</div>
-            <div class="small">Murojaatlar va foydalanuvchilarni boshqarish</div>
+            <div class="fw-semibold"><?= e(lang('admin.dash.hero_title', 'Admin panel')) ?></div>
+            <div class="small"><?= e(lang('admin.dash.hero_subtitle', 'Murojaatlar va foydalanuvchilarni boshqarish')) ?></div>
           </div>
         </div>
       </div>

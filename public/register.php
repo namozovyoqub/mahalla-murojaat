@@ -14,7 +14,7 @@ $values = [
 if (is_post()) {
     $token = $_POST['csrf_token'] ?? '';
     if (!csrf_validate($token)) {
-        flash('error', 'Xavfsizlik xatosi. Iltimos, qayta urinib ko\'ring.');
+        flash('error', lang('msg.csrf_error', "Xavfsizlik xatosi. Qayta urinib ko'ring."));
         redirect('public/register.php');
     }
 
@@ -27,27 +27,27 @@ if (is_post()) {
     $values = compact('full_name','phone','email', 'mahalla');
 
     $errors = [];
-    if ($full_name === '' || mb_strlen($full_name) < 3) $errors[] = 'F.I.Sh kamida 3 ta belgidan iborat bo\'lishi kerak.';
-    if ($phone === '' || !preg_match('/^[0-9+\-()\s]{7,20}$/', $phone)) $errors[] = 'Telefon raqam noto\'g\'ri formatda.';
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'Email noto\'g\'ri.';
-    if ($mahalla === '' || !in_array($mahalla, bukhara_mahallas(), true)) $errors[] = 'Mahalla nomi noto\'g\'ri.';
-    if (mb_strlen($password) < 6) $errors[] = 'Parol kamida 6 belgidan iborat bo\'lishi kerak.';
+    if ($full_name === '' || mb_strlen($full_name) < 3) $errors[] = lang('err.fullname_min', "F.I.Sh kamida 3 ta belgidan iborat bo'lishi kerak.");
+    if ($phone === '' || !preg_match('/^[0-9+\-()\s]{7,20}$/', $phone)) $errors[] = lang('err.phone_format', "Telefon raqam noto'g'ri formatda.");
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = lang('err.email_invalid', "Email noto'g'ri.");
+    if ($mahalla === '' || !in_array($mahalla, bukhara_mahallas(), true)) $errors[] = lang('err.invalid_mahalla', "Mahalla nomi noto'g'ri.");
+    if (mb_strlen($password) < 6) $errors[] = lang('err.password_min', "Parol kamida 6 belgidan iborat bo'lishi kerak.");
 
     if (!$errors) {
         try {
             $stmt = $pdo->prepare('SELECT id FROM users WHERE email = ? LIMIT 1');
             $stmt->execute([$email]);
             if ($stmt->fetch()) {
-                $errors[] = 'Ushbu email bilan foydalanuvchi allaqachon mavjud.';
+                $errors[] = lang('err.email_exists', 'Ushbu email bilan foydalanuvchi allaqachon mavjud.');
             } else {
                 $hash = password_hash($password, PASSWORD_DEFAULT);
                 $ins = $pdo->prepare('INSERT INTO users (full_name, phone, email, password, mahalla, created_at) VALUES (?, ?, ?, ?, ?, NOW())');
                 $ins->execute([$full_name, $phone, $email, $hash, $mahalla]);
-                flash('success', 'Ro\'yxatdan o\'tish muvaffaqiyatli! Endi tizimga kiring.');
+                flash('success', lang('msg.register_success', "Ro'yxatdan o'tish muvaffaqiyatli! Endi tizimga kiring."));
                 redirect('public/login.php');
             }
         } catch (Throwable $e) {
-            $errors[] = 'Server xatosi. Iltimos, keyinroq urinib ko\'ring.';
+            $errors[] = lang('err.server_error', "Server xatosi. Iltimos, keyinroq urinib ko'ring.");
         }
     }
 
@@ -94,7 +94,7 @@ require_once __DIR__ . '/../includes/header.php';
         </form>
         <div class="mt-3 d-flex justify-content-between">
           <span class="text-muted small"><?= e(lang('register.have_account', 'Hisobingiz bormi?')) ?></span>
-          <a href="<?= e(rtrim(BASE_URL,'/')) ?>/public/login.php">Kirish</a>
+          <a href="<?= e(rtrim(BASE_URL,'/')) ?>/public/login.php"><?= e(lang('login.submit', 'Kirish')) ?></a>
         </div>
       </div>
       <div class="col-md-6 p-0 order-1 order-md-2">

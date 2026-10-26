@@ -12,7 +12,7 @@ $code = trim((string)($_GET['code'] ?? ''));
 if (is_post()) {
     $token = $_POST['csrf_token'] ?? '';
     if (!csrf_validate($token)) {
-        flash('error', 'Xavfsizlik xatosi.');
+        flash('error', lang('msg.csrf_error', 'Xavfsizlik xatosi.'));
         redirect('public/track.php');
     }
     $app_id = trim((string)($_POST['app_id'] ?? ''));
@@ -21,14 +21,14 @@ if (is_post()) {
         $stmt = $pdo->prepare('SELECT id, public_code, type, mahalla, title, status, created_at, updated_at FROM applications WHERE public_code = ?');
         $stmt->execute([$code]);
         $app = $stmt->fetch();
-        if (!$app) { flash('error', 'Kod bo‘yicha murojaat topilmadi.'); }
+        if (!$app) { flash('error', lang('msg.not_found_by_code', 'Kod bo‘yicha murojaat topilmadi.')); }
     } elseif ($app_id !== '' && ctype_digit($app_id)) {
         $stmt = $pdo->prepare('SELECT id, public_code, type, mahalla, title, status, created_at, updated_at FROM applications WHERE id = ?');
         $stmt->execute([(int)$app_id]);
         $app = $stmt->fetch();
-        if (!$app) { flash('error', 'Murojaat ID bo‘yicha topilmadi.'); }
+        if (!$app) { flash('error', lang('msg.not_found_by_id', 'Murojaat ID bo‘yicha topilmadi.')); }
     } else {
-        flash('error', 'ID yoki Kod ni to‘g‘ri kiriting.');
+        flash('error', lang('msg.enter_id_or_code', 'ID yoki Kod ni to‘g‘ri kiriting.'));
     }
 }
 ?>
@@ -65,8 +65,8 @@ if (is_post()) {
     <div class="card shadow-sm mb-3">
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <div class="fw-semibold">ID: <?= (int)$app['id'] ?> • Kod: <?= e($app['public_code'] ?? '') ?></div>
-          <span class="badge bg-<?= e(status_badge_class($app['status'])) ?>"><?= e($app['status']) ?></span>
+          <div class="fw-semibold">ID: <?= (int)$app['id'] ?> • <?= e(lang('common.code', 'Kod')) ?>: <?= e($app['public_code'] ?? '') ?></div>
+          <span class="badge bg-<?= e(status_badge_class($app['status'])) ?>"><?= e(status_label($app['status'])) ?></span>
         </div>
         <div class="small text-muted mb-1"><?= e(app_types()[$app['type']] ?? ucfirst((string)$app['type'])) ?> • <?= e(format_datetime($app['created_at'])) ?><?php if (!empty($app['mahalla'])): ?> • <?= e(lang('app.label.mahalla', 'Mahalla')) ?>: <?= e($app['mahalla']) ?><?php endif; ?></div>
         <div class="line-clamp-3"><?= e($app['title']) ?></div>
@@ -89,9 +89,9 @@ if (is_post()) {
             <li class="list-group-item">
               <div class="small text-muted mb-1"><?= e(format_datetime($row['created_at'])) ?></div>
               <div>
-                <span class="badge text-bg-<?= e(status_badge_class((string)$row['prev_status'])) ?>"><?= e($row['prev_status'] ?? '-') ?></span>
+                <span class="badge text-bg-<?= e(status_badge_class((string)$row['prev_status'])) ?>"><?= e(status_label($row['prev_status'] ?? null)) ?></span>
                 <i class="fa-solid fa-arrow-right mx-1"></i>
-                <span class="badge text-bg-<?= e(status_badge_class((string)$row['new_status'])) ?>"><?= e($row['new_status'] ?? '-') ?></span>
+                <span class="badge text-bg-<?= e(status_badge_class((string)$row['new_status'])) ?>"><?= e(status_label($row['new_status'] ?? null)) ?></span>
               </div>
               <?php if (!empty($row['comment'])): ?>
                 <div class="mt-1 small"><?= nl2br(e($row['comment'])) ?></div>

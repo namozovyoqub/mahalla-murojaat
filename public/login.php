@@ -45,7 +45,7 @@ if (is_post()) {
 
         if ($adminOk) {
             login_admin((int)$admin['id']);
-            flash('success', 'Admin paneliga xush kelibsiz!');
+            flash('success', lang('msg.admin_welcome', 'Admin paneliga xush kelibsiz!'));
             redirect('admin/dashboard.php');
         } else {
             flash('error', lang('msg.invalid_credentials', "Email yoki parol noto'g'ri."));
@@ -83,7 +83,7 @@ require_once __DIR__ . '/../includes/header.php';
         <div class="text-center">
           <a href="<?= e(rtrim(BASE_URL,'/')) ?>/public/oneid_login.php" class="btn btn-outline-primary w-100 py-2 d-flex align-items-center justify-content-center gap-2 fw-semibold" style="border-width: 2px;">
             <i class="fa-solid fa-fingerprint"></i>
-            OneID orqali kirish
+            <?= e(lang('login.oneid_btn', 'OneID orqali kirish')) ?>
           </a>
         </div>
       </div>

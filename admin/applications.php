@@ -69,8 +69,8 @@ $rows = $stmt->fetchAll();
   <img src="<?= e($page_img) ?>" alt="Uzbekistan – tarixiy obida">
   <div class="cover-overlay"></div>
   <div class="cover-caption">
-    <div class="h6 fw-semibold">Murojaatlar</div>
-    <div class="small">Filtrlash va ko‘rish</div>
+    <div class="h6 fw-semibold"><?= e(lang('nav.admin.applications', 'Murojaatlar')) ?></div>
+    <div class="small"><?= e(lang('admin.app.filter_view', 'Filtrlash va ko‘rish')) ?></div>
   </div>
 </div>
 <div class="row">
@@ -79,44 +79,44 @@ $rows = $stmt->fetchAll();
       <div class="card-body">
         <form class="row g-2">
           <div class="col-12 col-md-3">
-            <label class="form-label">ID yoki Kod</label>
-            <input type="text" name="q" value="<?= e($filters['q']) ?>" class="form-control" placeholder="Masalan: 1024 yoki AB3D7K9PQS">
+            <label class="form-label"><?= e(lang('admin.app.id_or_code', 'ID yoki Kod')) ?></label>
+            <input type="text" name="q" value="<?= e($filters['q']) ?>" class="form-control" placeholder="<?= e(lang('admin.app.id_or_code_ph', 'Masalan: 1024 yoki AB3D7K9PQS')) ?>">
           </div>
           <div class="col-6 col-md-3">
-            <label class="form-label">Status</label>
+            <label class="form-label"><?= e(lang('common.status', 'Status')) ?></label>
             <select name="status" class="form-select">
-              <option value="">— Barchasi —</option>
+              <option value="">— <?= e(lang('common.all', 'Barchasi')) ?> —</option>
               <?php foreach (statuses() as $s): ?>
-                <option value="<?= e($s) ?>" <?= $filters['status']===$s?'selected':'' ?>><?= e($s) ?></option>
+                <option value="<?= e($s) ?>" <?= $filters['status']===$s?'selected':'' ?>><?= e(status_label($s)) ?></option>
               <?php endforeach; ?>
             </select>
           </div>
           <div class="col-6 col-md-3">
-            <label class="form-label">Turi</label>
+            <label class="form-label"><?= e(lang('admin.app.type', 'Turi')) ?></label>
             <select name="type" class="form-select">
-              <option value="">— Barchasi —</option>
+              <option value="">— <?= e(lang('common.all', 'Barchasi')) ?> —</option>
               <?php foreach (app_types() as $k=>$v): ?>
                 <option value="<?= e($k) ?>" <?= $filters['type']===$k?'selected':'' ?>><?= e($v) ?></option>
               <?php endforeach; ?>
             </select>
           </div>
           <div class="col-6 col-md-3">
-            <label class="form-label">Sana (dan)</label>
+            <label class="form-label"><?= e(lang('admin.app.date_from', 'Sana (dan)')) ?></label>
             <input type="date" name="from" class="form-control" value="<?= e($filters['from']) ?>">
           </div>
           <div class="col-6 col-md-3">
-            <label class="form-label">Sana (gacha)</label>
+            <label class="form-label"><?= e(lang('admin.app.date_to', 'Sana (gacha)')) ?></label>
             <input type="date" name="to" class="form-control" value="<?= e($filters['to']) ?>">
           </div>
           <div class="col-12 d-flex justify-content-end">
-            <button class="btn btn-primary"><i class="fa-solid fa-filter me-1"></i>Filtrlash</button>
+            <button class="btn btn-primary"><i class="fa-solid fa-filter me-1"></i><?= e(lang('admin.app.filter', 'Filtrlash')) ?></button>
           </div>
         </form>
       </div>
     </div>
   </div>
   <?php if (!$rows): ?>
-    <div class="col-12"><div class="alert alert-secondary">Ma'lumot topilmadi.</div></div>
+    <div class="col-12"><div class="alert alert-secondary"><?= e(lang('admin.app.not_found', "Ma'lumot topilmadi.")) ?></div></div>
   <?php endif; ?>
   <?php foreach ($rows as $r): ?>
     <div class="col-12">
@@ -125,21 +125,21 @@ $rows = $stmt->fetchAll();
           <div class="d-flex justify-content-between">
             <div>
               <div class="fw-semibold">[<?= e(app_types()[$r['type']] ?? $r['type']) ?>] <?= e($r['title']) ?></div>
-              <div class="small text-muted">Foydalanuvchi: <?= e($r['full_name']) ?> | Yaratilgan: <?= e(format_datetime($r['created_at'])) ?><?php if (!empty($r['mahalla'])): ?> | Mahalla: <?= e($r['mahalla']) ?><?php endif; ?></div>
+              <div class="small text-muted"><?= e(lang('common.user', 'Foydalanuvchi')) ?>: <?= e($r['full_name']) ?> | <?= e(lang('common.created', 'Yaratilgan')) ?>: <?= e(format_datetime($r['created_at'])) ?><?php if (!empty($r['mahalla'])): ?> | <?= e(lang('app.label.mahalla', 'Mahalla')) ?>: <?= e($r['mahalla']) ?><?php endif; ?></div>
             </div>
             <div>
-              <span class="badge text-bg-<?= e(status_badge_class($r['status'])) ?>"><?= e($r['status']) ?></span>
+              <span class="badge text-bg-<?= e(status_badge_class($r['status'])) ?>"><?= e(status_label($r['status'])) ?></span>
             </div>
           </div>
           <div class="mt-2 d-flex gap-2">
             <?php if (isset($r['public_code']) && $r['public_code']): ?>
-              <span class="small text-muted">Kod:</span>
+              <span class="small text-muted"><?= e(lang('common.code', 'Kod')) ?>:</span>
               <code><?= e($r['public_code']) ?></code>
-              <a class="btn btn-sm btn-outline-secondary" href="<?= e(rtrim(BASE_URL,'/')) ?>/public/track.php?code=<?= e(urlencode($r['public_code'])) ?>">Public ko'rish</a>
+              <a class="btn btn-sm btn-outline-secondary" href="<?= e(rtrim(BASE_URL,'/')) ?>/public/track.php?code=<?= e(urlencode($r['public_code'])) ?>"><?= e(lang('common.view_public', "Public ko'rish")) ?></a>
             <?php endif; ?>
-            <a class="btn btn-sm btn-outline-primary" href="<?= e(rtrim(BASE_URL,'/')) ?>/admin/application_view.php?id=<?= (int)$r['id'] ?>"><i class="fa-solid fa-eye me-1"></i>Ko'rish</a>
+            <a class="btn btn-sm btn-outline-primary" href="<?= e(rtrim(BASE_URL,'/')) ?>/admin/application_view.php?id=<?= (int)$r['id'] ?>"><i class="fa-solid fa-eye me-1"></i><?= e(lang('admin.app.view', "Ko'rish")) ?></a>
             <?php if (!empty($r['file_path'])): ?>
-              <a class="btn btn-sm btn-outline-secondary" target="_blank" href="<?= e(rtrim(BASE_URL,'/')) ?>/<?= e($r['file_path']) ?>"><i class="fa-solid fa-paperclip me-1"></i>Fayl</a>
+              <a class="btn btn-sm btn-outline-secondary" target="_blank" href="<?= e(rtrim(BASE_URL,'/')) ?>/<?= e($r['file_path']) ?>"><i class="fa-solid fa-paperclip me-1"></i><?= e(lang('common.file', 'Fayl')) ?></a>
             <?php endif; ?>
           </div>
         </div>
