@@ -1,0 +1,23 @@
+# Uploaded user files
+/uploads/*
+!/uploads/.htaccess
+!/uploads/.gitkeep
+
+# Temporary and SQLite DB files
+*.sqlite
+*.sqlite3
+*.db
+*.log
+login_debug.txt
+
+# Local debug scripts
+test_login.php
+update_admin.php
+fix_admin.php
+
+# Vercel & IDE
+.vercel
+.idea
+.vscode
+.DS_Store
+Thumbs.db

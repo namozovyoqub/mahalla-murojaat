@@ -1,0 +1,7 @@
+.git
+.gitignore
+*.log
+login_debug.txt
+test_login.php
+update_admin.php
+fix_admin.php
