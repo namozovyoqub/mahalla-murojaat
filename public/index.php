@@ -140,7 +140,7 @@ $cover = asset_url('assets/cover.png',   'https://images.unsplash.com/photo-1521
     <div class="row g-3">
       <?php foreach ($homeNews as $n): ?>
         <?php 
-          $img = $n['cover_url'] ?: asset_url('assets/news1.png', 'https://images.unsplash.com/photo-1520975922284-4f50457f2874?q=80&w=1200&auto=format&fit=crop'); 
+          $img = news_cover_url($n['cover_url']); 
           $title = ($lang === 'ru' && !empty($n['title_ru'])) ? $n['title_ru'] : $n['title'];
         ?>
         <div class="col-12 col-md-6 col-lg-4">

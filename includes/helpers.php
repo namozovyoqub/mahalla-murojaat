@@ -58,6 +58,25 @@ function asset_url(string $relativePath, string $fallbackUrl = ''): string {
     return $fallbackUrl;
 }
 
+function news_cover_url(?string $url): string {
+    if (!$url) {
+        return asset_url('assets/news1.png');
+    }
+    if (str_contains($url, 'photo-1520975922284') || str_contains($url, 'constitution')) {
+        return asset_url('assets/news-constitution.jpg');
+    }
+    if (str_contains($url, 'photo-1542037104857') || str_contains($url, 'budget')) {
+        return asset_url('assets/news-open-budget.jpg');
+    }
+    if (str_contains($url, 'photo-1517502884422') || str_contains($url, 'raqamli')) {
+        return asset_url('assets/news-raqamli.png');
+    }
+    if (preg_match('#^https?://#i', $url)) {
+        return $url;
+    }
+    return asset_url($url, asset_url('assets/news1.png'));
+}
+
 function lang(string $key, ?string $default = null): string {
     $map = $GLOBALS['__i18n'] ?? [];
     return (string)($map[$key] ?? ($default ?? $key));

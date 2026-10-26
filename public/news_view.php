@@ -18,7 +18,7 @@ $__page_title = $title;
 $__meta_desc = mb_substr(strip_tags($body), 0, 140);
 require_once __DIR__ . '/../includes/header.php';
 
-$img = $post['cover_url'] ?: asset_url('assets/news1.jpg', 'https://images.unsplash.com/photo-1542037104857-ffbb0b9155fb?q=80&w=1600&auto=format&fit=crop');
+$img = news_cover_url($post['cover_url']);
 ?>
 <div class="cover mb-3" style="height: 220px;">
   <img src="<?= e($img) ?>" alt="Cover">

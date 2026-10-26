@@ -231,23 +231,33 @@ function _seed_default_data(PDO $pdo): void {
     } catch (Throwable $e) {}
 
     try {
+        // Avval mavjud yangiliklardagi noto'g'ri tashqi URL larni lokal rasmlarga to'g'irlaymiz
+        $map = [
+            'Konstitutsiyada mahalla maqomi mustahkamlandi' => 'assets/news-constitution.jpg',
+            '"Mahalla budjeti" tizimi to‘liq joriy etildi' => 'assets/news-open-budget.jpg',
+            '"Raqamli mahalla" platformasi yangilandi' => 'assets/news-raqamli.png'
+        ];
+        foreach ($map as $title => $cover) {
+            $pdo->prepare("UPDATE news SET cover_url = ? WHERE title = ? AND (cover_url LIKE '%unsplash%' OR cover_url IS NULL OR cover_url = '')")->execute([$cover, $title]);
+        }
+
         $cntNews = (int)$pdo->query('SELECT COUNT(*) FROM news')->fetchColumn();
         if ($cntNews === 0) {
             $stmt = $pdo->prepare('INSERT INTO news (title, body, cover_url, created_at) VALUES (?, ?, ?, NOW())');
             $stmt->execute([
                 '"Mahalla budjeti" tizimi to‘liq joriy etildi',
                 "2024-yil 1-yanvardan boshlab barcha tuman va shaharlarda 'Mahalla budjeti' tizimi ishga tushdi. Soliq tushumlarining bir qismi bevosita mahallalarda qoladi va infratuzilmani yaxshilashga sarflanadi.",
-                'https://images.unsplash.com/photo-1542037104857-ffbb0b9155fb?q=80&w=1200&auto=format&fit=crop'
+                'assets/news-open-budget.jpg'
             ]);
             $stmt->execute([
                 'Konstitutsiyada mahalla maqomi mustahkamlandi',
                 "Yangi tahrirdagi Konstitutsiyaning 127-moddasida mahalla fuqarolar yig‘inlari maqomi alohida belgilab qo‘yildi. Bu mahalla institutining jamiyatdagi rolini oshirishga xizmat qiladi.",
-                'https://images.unsplash.com/photo-1520975922284-4f50457f2874?q=80&w=1200&auto=format&fit=crop'
+                'assets/news-constitution.jpg'
             ]);
             $stmt->execute([
                 '"Raqamli mahalla" platformasi yangilandi',
                 "Barcha ma'lumotlarni yagona bazada jamlash va aholiga onlayn xizmat ko‘rsatish sifatini oshirish maqsadida tizimga yangi qulayliklar qo‘shildi.",
-                'https://images.unsplash.com/photo-1517502884422-41eaead166d4?q=80&w=1200&auto=format&fit=crop'
+                'assets/news-raqamli.png'
             ]);
         }
     } catch (Throwable $e) {}
