@@ -43,9 +43,15 @@ function ensure_upload_dir(): void {
 }
 
 function asset_url(string $relativePath, string $fallbackUrl = ''): string {
-    $abs = dirname(__DIR__) . '/public/' . ltrim($relativePath, '/');
+    $clean = ltrim($relativePath, '/');
+    $abs = dirname(__DIR__) . '/public/' . $clean;
     if (is_file($abs)) {
-        $url = rtrim(BASE_URL, '/') . '/public/' . ltrim($relativePath, '/');
+        $isVercel = !empty(getenv('VERCEL')) || !empty(getenv('AWS_LAMBDA_FUNCTION_NAME'));
+        if ($isVercel || BASE_URL === '') {
+            $url = '/' . $clean;
+        } else {
+            $url = rtrim(BASE_URL, '/') . '/public/' . $clean;
+        }
         $ver = @filemtime($abs) ?: time();
         return $url . '?v=' . $ver;
     }

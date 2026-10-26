@@ -2,19 +2,10 @@
 declare(strict_types=1);
 require_once __DIR__ . '/../includes/init.php';
 require_once __DIR__ . '/../includes/header.php';
-// Mahalliy aktivlar mavjud bo'lsa, ularni ishlatamiz; aks holda onlayn zaxira rasmlardan foydalanamiz
-$asset_or = function(string $rel, string $fallback): string {
-  $path = __DIR__ . '/' . ltrim($rel, '/');
-  if (is_file($path)) {
-    return rtrim(BASE_URL,'/').'/public/'.ltrim($rel, '/');
-  }
-  return $fallback;
-};
-
-$img1 = $asset_or('assets/registan.png', 'https://images.unsplash.com/photo-1603451952566-9b6a26c6f1d0?q=80&w=1600&auto=format&fit=crop'); // Samarqand, Registon (o'xshash)
-$img2 = $asset_or('assets/bukhara.png',  'https://images.unsplash.com/photo-1544989164-31dc3c645987?q=80&w=1600&auto=format&fit=crop'); // Buxoro (o'xshash)
-$img3 = $asset_or('assets/khiva.png',    'https://images.unsplash.com/photo-1523731407965-2430cd12f5e4?q=80&w=1600&auto=format&fit=crop'); // Xiva (o'xshash)
-$cover = $asset_or('assets/cover.png',    'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1600&auto=format&fit=crop');
+$img1 = asset_url('assets/registan.png', 'https://images.unsplash.com/photo-1603451952566-9b6a26c6f1d0?q=80&w=1600&auto=format&fit=crop'); // Samarqand, Registon
+$img2 = asset_url('assets/bukhara.png',  'https://images.unsplash.com/photo-1544989164-31dc3c645987?q=80&w=1600&auto=format&fit=crop'); // Buxoro
+$img3 = asset_url('assets/khiva.png',    'https://images.unsplash.com/photo-1523731407965-2430cd12f5e4?q=80&w=1600&auto=format&fit=crop'); // Xiva
+$cover = asset_url('assets/cover.png',   'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1600&auto=format&fit=crop');
 ?>
 <div id="heroCarousel" class="carousel slide mb-4" data-bs-ride="carousel" data-bs-interval="5000">
   <div class="carousel-inner rounded-3 overflow-hidden">
@@ -149,7 +140,7 @@ $cover = $asset_or('assets/cover.png',    'https://images.unsplash.com/photo-152
     <div class="row g-3">
       <?php foreach ($homeNews as $n): ?>
         <?php 
-          $img = $n['cover_url'] ?: $asset_or('assets/news1.png', 'https://images.unsplash.com/photo-1520975922284-4f50457f2874?q=80&w=1200&auto=format&fit=crop'); 
+          $img = $n['cover_url'] ?: asset_url('assets/news1.png', 'https://images.unsplash.com/photo-1520975922284-4f50457f2874?q=80&w=1200&auto=format&fit=crop'); 
           $title = ($lang === 'ru' && !empty($n['title_ru'])) ? $n['title_ru'] : $n['title'];
         ?>
         <div class="col-12 col-md-6 col-lg-4">
@@ -174,7 +165,7 @@ $cover = $asset_or('assets/cover.png',    'https://images.unsplash.com/photo-152
       <div class="col-md-4">
         <div class="card shadow-sm h-100 card-hover">
           <div class="cover" style="height: 160px;">
-            <img src="<?= e($asset_or('assets/news1.png', 'https://images.unsplash.com/photo-1542037104857-ffbb0b9155fb?q=80&w=1200&auto=format&fit=crop')) ?>" alt="Yangilik" class="img-fluid w-100 h-100 object-fit-cover">
+            <img src="<?= e(asset_url('assets/news1.png', 'https://images.unsplash.com/photo-1542037104857-ffbb0b9155fb?q=80&w=1200&auto=format&fit=crop')) ?>" alt="Yangilik" class="img-fluid w-100 h-100 object-fit-cover">
             <div class="cover-overlay"></div>
           </div>
           <div class="card-body">
@@ -186,7 +177,7 @@ $cover = $asset_or('assets/cover.png',    'https://images.unsplash.com/photo-152
       <div class="col-md-4">
         <div class="card shadow-sm h-100 card-hover">
           <div class="cover" style="height: 160px;">
-            <img src="<?= e($asset_or('assets/news2.png', 'https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=1200&auto=format&fit=crop')) ?>" alt="Yangilik" class="img-fluid w-100 h-100 object-fit-cover">
+            <img src="<?= e(asset_url('assets/news2.png', 'https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=1200&auto=format&fit=crop')) ?>" alt="Yangilik" class="img-fluid w-100 h-100 object-fit-cover">
             <div class="cover-overlay"></div>
           </div>
           <div class="card-body">
@@ -198,7 +189,7 @@ $cover = $asset_or('assets/cover.png',    'https://images.unsplash.com/photo-152
       <div class="col-md-4">
         <div class="card shadow-sm h-100 card-hover">
           <div class="cover" style="height: 160px;">
-            <img src="<?= e($asset_or('assets/news3.jpg', 'https://images.unsplash.com/photo-1520975922284-4f50457f2874?q=80&w=1200&auto=format&fit=crop')) ?>" alt="Yangilik" class="img-fluid w-100 h-100 object-fit-cover">
+            <img src="<?= e(asset_url('assets/news3.jpg', 'https://images.unsplash.com/photo-1520975922284-4f50457f2874?q=80&w=1200&auto=format&fit=crop')) ?>" alt="Yangilik" class="img-fluid w-100 h-100 object-fit-cover">
             <div class="cover-overlay"></div>
           </div>
           <div class="card-body">

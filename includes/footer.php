@@ -569,16 +569,21 @@ declare(strict_types=1);
       return fallbackPhotos[i];
     }
     document.querySelectorAll('img').forEach(function(img){
-      if (!img.getAttribute('loading')) img.setAttribute('loading','lazy');
+      if (!img.closest('.carousel') && !img.closest('.cover')) {
+        if (!img.getAttribute('loading')) img.setAttribute('loading','lazy');
+      }
       if (!img.getAttribute('decoding')) img.setAttribute('decoding','async');
-      if (!img.getAttribute('referrerpolicy')) img.setAttribute('referrerpolicy','no-referrer');
       var handler = function(){
         if (img.dataset.fallbackApplied === '1') return;
         img.dataset.fallbackApplied = '1';
+        if (img.src && img.src.includes('/public/assets/')) {
+          img.src = img.src.replace('/public/assets/', '/assets/');
+          return;
+        }
         img.src = pickFallback();
       };
       img.addEventListener('error', handler);
-      if (img.complete && img.naturalWidth === 0) {
+      if (img.complete && img.naturalWidth === 0 && img.src) {
         handler();
       }
     });
